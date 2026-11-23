@@ -30,6 +30,8 @@ No repositório do GitHub, selecione **Settings → Pages → Source → GitHub 
 
 Para transferir seus estudos da prévia local para o site publicado, exporte um backup em **Configurações → Seus dados** na prévia e importe o arquivo no novo endereço.
 
+O workflow ativa a tela de entrada se o repositório for público. A checagem acontece no navegador, porque o Pages é uma hospedagem estática. A tela controla a entrada na interface e os arquivos do aplicativo são públicos. Progresso e anotações permanecem no navegador em que foram salvos. Para usar a tela de entrada em um build local, defina `VITE_STUDYOPS_LOGIN=true` antes do build.
+
 ## Fluxo de estudo
 
 1. Abra **Minha Trilha** para editar fases, disciplinas, módulos, tópicos e atividades. Cadastre um curso próprio adicionando uma disciplina à fase escolhida.

@@ -38,6 +38,7 @@ jobs:
       - name: Gerar versão de produção
         env:
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          VITE_STUDYOPS_LOGIN: ${{ github.event.repository.private == false }}
         run: pnpm build --base "${PAGES_BASE_PATH%/}/"
       - name: Enviar arquivos estáticos
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5

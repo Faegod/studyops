@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState, useSyncExtern
 import type { MouseEvent, ReactNode } from 'react'
 import {
   BookOpen, ChartNoAxesCombined, CheckCircle2, ChevronRight, FolderKanban, GraduationCap,
-  HardDrive, Layers3, LayoutDashboard, LibraryBig, Menu, Moon, NotebookPen, PhoneIncoming,
+  HardDrive, Layers3, LayoutDashboard, LibraryBig, LogOut, Menu, Moon, NotebookPen, PhoneIncoming,
   RotateCcw, Search, Settings as SettingsIcon, Sun, X, Zap,
 } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -13,12 +13,6 @@ import Dashboard from './features/dashboard/Dashboard'
 import CurriculumPage from './features/curriculum/CurriculumPage'
 import { InterruptionDialog, StudyPlanner, StudyWorkspace } from './features/session/StudyWorkspace'
 import { readCheckpoint } from './features/session/checkpoint'
-
-
-
-
-
-
 import SearchModal from './features/search/SearchModal'
 import { readWorkspace, useLocalDatabase } from './ui/useLocalDatabase'
 import { useStudyNotice } from './ui/useStudyNotice'
@@ -58,7 +52,7 @@ function routeUrl(page: Page, ...parts: (string | undefined)[]) {
   return `#${[page, ...parts.map((value) => encodeURIComponent(value ?? ''))].join('/')}`
 }
 
-export function App({ onUpdate }: { onUpdate?: () => void } = {}) {
+export function App({ onUpdate, onSignOut }: { onUpdate?: () => void; onSignOut?: () => void } = {}) {
   const route = useSyncExternalStore(subscribeHash, getHash)
   const [requestedPage, ...parts] = route.slice(1).split('/').map(routePart)
   const currentPage = navigation.find((item) => item.id === requestedPage) ?? studyNav[0]
@@ -140,6 +134,14 @@ export function App({ onUpdate }: { onUpdate?: () => void } = {}) {
       navigate('painel')
       if (emergency) setInterruption(paused)
       else notify('Sessão pausada. Seu ponto de retomada foi salvo.')
+    })
+  }
+
+  function signOut() {
+    const stoppedAt = Date.now()
+    return runAction(async () => {
+      if (active) await pauseSession(active.id, readCheckpoint(active.id, active.checkpoint), stoppedAt)
+      onSignOut?.()
     })
   }
 
@@ -275,6 +277,7 @@ export function App({ onUpdate }: { onUpdate?: () => void } = {}) {
           <div className="topbar-actions">
             <button className="search-trigger" onClick={() => setSearch(true)} aria-label="Buscar no StudyOps"><Search size={17} /><span>Buscar...</span>{shortcuts && <kbd>Ctrl K</kbd>}</button>
             <button className="icon-button" aria-label={dark ? 'Ativar tema claro' : 'Ativar tema escuro'} title={dark ? 'Ativar tema claro' : 'Ativar tema escuro'} onClick={() => void runAction(async () => { await saveSettings({ theme: dark ? 'light' : 'dark' }) })}>{dark ? <Sun size={18} /> : <Moon size={18} />}</button>
+            {onSignOut && <button className="icon-button" aria-label="Sair do StudyOps" title="Sair do StudyOps" onClick={() => void signOut()} disabled={busy}><LogOut size={18} /></button>}
           </div>
         </header>
         <main className="app-content" id="conteudo" tabIndex={-1}>

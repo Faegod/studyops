@@ -36,7 +36,7 @@
 .quick-heading h2, .dashboard-section h2 { font-size: 1.12rem; line-height: 1.2; font-weight: 800; }
 .quick-heading p, .dashboard-section header p { margin-top: 3px; color: var(--muted); font-size: .82rem; }
 .duration-picker { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-.duration-picker button { min-height: 35px; padding: 5px 2px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); background: var(--surface); font-size: .82rem; font-weight: 670; white-space: nowrap; }
+.duration-picker button { min-height: 35px; padding: 5px 2px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); background: var(--surface); font-size: .82rem; font-weight: 670; white-space: nowrap; transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease, color var(--motion-fast) ease; }
 .duration-picker button:hover { border-color: var(--accent); }
 .duration-picker button[aria-pressed='true'] { border-color: #77ab91; color: var(--strong); background: var(--soft); }
 .quick-recommendation { display: grid; gap: 3px; flex: 1; align-content: center; min-height: 53px; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--page); font-size: .83rem; }
@@ -70,7 +70,7 @@
 .chart-rules { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; }
 .chart-rules span { border-bottom: 1px dashed var(--line); }
 .chart-days { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.chart-day { position: relative; display: grid; justify-items: center; align-items: end; min-width: 0; border-radius: 6px; }
+.chart-day { position: relative; display: grid; justify-items: center; align-items: end; min-width: 0; border-radius: 6px; transition: background var(--motion-fast) ease; }
 .chart-day:hover, .chart-day[aria-pressed='true'] { background: var(--soft); }
 .chart-bar { width: min(32px, 54%); border-radius: 4px 4px 1px 1px; background: #9cccb1; }
 .chart-bar.today { background: #4a9671; }
@@ -88,6 +88,21 @@
 .dashboard-records { list-style: none; padding: 0; margin: 9px 0 0; }
 .dashboard-records li { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line); font-size: .85rem; }
 .dashboard-records time { margin-left: auto; color: var(--muted); white-space: nowrap; font-size: .75rem; }
+.dashboard-records li > span { min-width: 0; overflow-wrap: anywhere; }
+
+@keyframes studyops-hero-drift {
+  from { transform: translateX(10px); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dashboard-top, .dashboard-metrics, .dashboard-lower, .history-card {
+    animation: studyops-enter 320ms var(--motion-out) backwards;
+  }
+  .dashboard-metrics { animation-delay: 35ms; }
+  .dashboard-lower, .history-card { animation-delay: 65ms; }
+  .hero-art { animation: studyops-hero-drift 440ms var(--motion-out); }
+}
 
 @media (min-width: 1240px) {
   .dashboard-top, .dashboard-lower { gap: 19px; }
